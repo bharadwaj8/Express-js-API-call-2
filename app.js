@@ -28,13 +28,22 @@ const initializeDBAndServer = async () => {
 
 initializeDBAndServer();
 
+const convertCricketToResponse = (obj) => {
+  return {
+    playerId: obj.player_id,
+    playerName: obj.player_name,
+    jerseyName: obj.jerseyName,
+    role: obj.role,
+  };
+};
+
 //GET players API
 app.get("/players/", async (request, response) => {
   const teamPlayersQuery = `
     SELECT * FROM cricket_team;`;
 
   const playerDetails = await db.all(teamPlayersQuery);
-  response.send(playerDetails);
+  response.send(playerDetails.map((each) => convertCricketToResponse(each)));
 });
 
 //Add player API
@@ -63,7 +72,7 @@ app.get("/players/:playerId/", async (request, response) => {
     WHERE player_id=${playerId};`;
 
   const dbResponse = await db.get(getPlayerQuery);
-  response.send(dbResponse);
+  response.send(convertCricketToResponse(dbResponse));
 });
 
 //Update player ID
@@ -98,3 +107,5 @@ app.delete("/players/:playerId/", async (request, response) => {
 
   response.send("Player Removed");
 });
+
+module.exports = express;
