@@ -32,7 +32,7 @@ const convertCricketToResponse = (obj) => {
   return {
     playerId: obj.player_id,
     playerName: obj.player_name,
-    jerseyName: obj.jerseyName,
+    jerseyNumber: obj.jersey_number,
     role: obj.role,
   };
 };
@@ -87,11 +87,8 @@ app.put("/players/:playerId/", async (request, response) => {
     role='${role}'
     WHERE player_id=${playerId};
     `;
-  try {
-    await db.run(updatePlayerQuery);
-  } catch (e) {
-    console.log(e.message);
-  }
+
+  await db.run(updatePlayerQuery);
 
   response.send("Player Details Updated");
 });
